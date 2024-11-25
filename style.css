@@ -1,0 +1,19 @@
+body{ background-color: rgb(172, 233, 213); }
+
+.container {
+    background-color: white;
+    min-height: 100vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.column {
+    width: 200px;
+    height: 40px;
+}
+
+input { width: 100%; }
