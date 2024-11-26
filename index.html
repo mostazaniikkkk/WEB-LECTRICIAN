@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-12"> <h1>WEB-LECTRICIAN</h1> </div>
             <div class="col-12">
-                <table border="1">
+                <table border="1" id="consume_table">
                     <thead>
                         <tr>
                             <th class="column">Nombre electrodomestico</th>
@@ -34,14 +34,17 @@
                 <h6 id="error" hidden>Error: No se encuentran todos los campos con contenido, por favor revisar tabla.</h6>
             </div>
             <div class="col-3"> <button id="new_item">Añadir elemento</button> </div>
-            <div class="col-3"> <button id="export_as_pdf" hidden>Descargar como PDF</button> </div>
+            <div class="col-3"> <button id="export_as_pdf">Descargar como PDF</button> </div>
             <div class="col-3"> <button id="export_as_pdf" hidden>Descargar como Exel</button> </div>
         </div>
     </div>
     <script src="table_manager.js"></script>
-    <script src="consumption_calcularor.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script src="graphics_manager.js"></script>
 </body>
 </html>
