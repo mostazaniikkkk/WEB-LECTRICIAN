@@ -1,116 +1,109 @@
-let item_count = 0; // Asegúrate de declarar item_count
-let totalConsumptionSum = 0; // Variable para almacenar la suma total
+let item_count = 0;
+let totalConsumptionSum = 0;
+const devices = [];
+
+function createNewCell(type, elementId) {
+    let cell = document.createElement(type);
+    cell.id = elementId;
+    return cell;
+}
+
+function setNewCell(row, element) {
+    let cell = document.createElement("th");
+    cell.appendChild(element);
+    row.appendChild(cell);
+}
+
+function createNewInput(row, placeholder, elementId, device, property) {
+    let input = createNewCell("input", elementId);
+    input.type = "text";
+    input.placeholder = placeholder;
+    input.addEventListener("input", (event) => {
+        let value = event.target.value;
+        if (property !== 'name') {
+            value = parseFloat(value) || 0; // Convertir a número si no es el nombre
+        }
+        device[property] = value;
+        console.log(`Updated ${property}:`, device[property]); // Verificar el valor actualizado
+        device.calculateConsumption();
+        updateDeviceRow(device, row);
+        updateTotalConsumption();
+        updateChart(); // Asegurarse de actualizar el gráfico
+    });
+    setNewCell(row, input);
+}
 
 function addNewItem() {
     let row = document.createElement("tr");
     row.id = `row_${item_count}`;
 
-    function _createNewCell(type, element) {
-        let cell = document.createElement(type);
-        cell.id = `${element}_${item_count}`;
-        return cell;
-    }
+    const device = new Device();
+    devices.push(device);
 
-    function _setNewCell(element) { 
-        let cell = document.createElement("th");
-        cell.appendChild(element);
-        row.appendChild(cell);
-        return cell;
-    }
+    createNewInput(row, "Ingrese el nombre del dispositivo", `name_${item_count}`, device, 'name');
+    createNewInput(row, "Ingrese el consumo del dispositivo", `consumption_${item_count}`, device, 'timeConsume');
+    createNewInput(row, "Ingrese el uso diario del dispositivo", `usage_${item_count}`, device, 'hoursActive');
+    createNewInput(row, "Ingrese el consumo pasivo del dispositivo", `passive_consumption_${item_count}`, device, 'passiveConsume');
 
-    function _createNewInput(placeholder, element) {
-        let cell = _createNewCell("input", element);
-        cell.type = "text";
-        cell.placeholder = placeholder;
-        cell.addEventListener("input", updateTotalConsumption);
-        _setNewCell(cell);
-    }
+    let consumption = createNewCell("p", `consumption_${item_count}`);
+    let consumptionCost = createNewCell("p", `consumption_cost_${item_count}`);
+    let deleteItem = createNewCell("input", `delete_item_${item_count}`);
+    deleteItem.type = "button";
+    deleteItem.value = "x";
+    deleteItem.addEventListener("click", () => deleteRow(row.id, device));
 
-    // Crea los elementos que están en los requerimientos.
-    _createNewInput("Ingrese el nombre del dispositivo", "name");
-    _createNewInput("Ingrese el consumo del dispositivo", "consumption");
-    _createNewInput("Ingrese el uso diario del dispositivo", "usage");
-    _createNewInput("Ingrese el consumo pasivo del dispositivo", "passive_consumption");
+    setNewCell(row, consumption);
+    setNewCell(row, consumptionCost);
+    setNewCell(row, deleteItem);
 
-    // Gestiona los 2 elementos diferentes
-    const light_cost = 170;
-
-    const consumption = _createNewCell("p", "consumption");
-    const consumption_cost = _createNewCell("p", "consumption_cost")
-    let delete_item = _createNewCell("input", "delete_item");
-    delete_item.type = "button";
-    delete_item.value = "x";
-    delete_item.addEventListener("click", function() {
-        deleteRow(row.id);
-    });
-
-    _setNewCell(consumption);
-    _setNewCell(consumption_cost);
-    _setNewCell(delete_item);
-
-    // Aplica los cambios
-    const table = document.getElementById("item_table");
-    table.appendChild(row);
-
+    document.getElementById("item_table").appendChild(row);
     item_count++;
+    console.log(`Added new device:`, device); // Verificar el nuevo dispositivo
 }
 
-function deleteRow(rowId) {
+function deleteRow(rowId, device) {
     const row = document.getElementById(rowId);
     if (row) {
         row.remove();
-        updateTotalConsumption(); // Actualiza el total después de eliminar una fila
+        const index = devices.indexOf(device);
+        if (index > -1) {
+            devices.splice(index, 1);
+        }
+        updateTotalConsumption();
     }
 }
 
-function getTotalConsuption(consuption, usage, pasive_consuption = 0) { return consuption * usage + pasive_consuption; }
+function updateDeviceRow(device, row) {
+    const consumptionCell = row.querySelector(`p[id^='consumption_']`);
+    const costCell = row.querySelector(`p[id^='consumption_cost_']`);
 
-function updateTotalConsumption() {
-    totalConsumptionSum = 0; // Reinicia la suma total
-    const light_cost = 0.17; //Coste Luz en pesos chilenos, actualizable
-    const limit = 12333;//Consumo promedio de luz por persona, actualizable
-
-    const rows = document.querySelectorAll("tr");
-    rows.forEach(row => {
-
-        const consumptionInput = row.querySelector("input[id^='consumption_']");
-        const usageInput = row.querySelector("input[id^='usage_']");
-        const passiveConsumptionInput = row.querySelector("input[id^='passive_consumption_']");
-        const totalConsumptionCell = row.querySelector("p[id^='consumption_']");
-        const totalCostCell = row.querySelector("p[id^='consumption_cost_']");
-
-        if (consumptionInput && usageInput && totalConsumptionCell) {
-            const consumption = parseFloat(consumptionInput.value) || 0;
-            const usage = parseFloat(usageInput.value) || 0;
-            const passiveConsumption = passiveConsumptionInput ? parseFloat(passiveConsumptionInput.value) || 0 : 0;
-
-            if (!isNaN(consumption) && !isNaN(usage)) {
-                const totalConsumption = getTotalConsuption(consumption, usage, passiveConsumption);
-                totalConsumptionCell.textContent = `${totalConsumption.toFixed(1)}w/h`;
-
-                totalCostCell.textContent = `$${(totalConsumption.toFixed(2) * light_cost).toFixed(0)}`;
-                totalConsumptionSum += totalConsumption; // Suma el consumo total de cada fila
-                totalCostSum = (totalConsumptionSum * light_cost).toFixed(0);
-            }
-        }
-    });
-    text = document.getElementById("consumption")
-    text.textContent = `Se detectó un consumo total de ${totalConsumptionSum.toFixed(2)}w/h, con un coste de $${totalCostSum}.`;
-    const overCost = (totalCostSum) - ((limit * light_cost).toFixed(0));
-
-    if(totalConsumptionSum != 0) {text.hidden = false;}
-    else{text.hidden = true;}
-
-    warning = document.getElementById("warning");
-    message = "Aviso: Se esta consumiendo energia por sobre el promedio per capita nacional, se recomienda disminuir el consumo en alguno de sus articulos u optar por un electrodomestico de menor consumo.";
-    warning.innerHTML = `${message} <u>Se esta produciendo un sobregasto de $${overCost}.</u>`;
-
-    if(overCost <= 0){ warning.hidden = true; }
-    else{warning.hidden = false;}
-
-    console.log(totalConsumptionSum);
-    console.log(limit);
+    if (consumptionCell && costCell) {
+        consumptionCell.textContent = `${device.totalConsume}w/h`;
+        costCell.textContent = `$${device.cost}`;
+    }
 }
 
-addNewItem();
+function updateTotalConsumption() {
+    totalConsumptionSum = 0;
+    const limit = 12333;
+
+    devices.forEach(device => {
+        device.calculateConsumption();
+        totalConsumptionSum += parseFloat(device.totalConsume);
+    });
+
+    const totalCostSum = (totalConsumptionSum * light_cost).toFixed(0);
+    const text = document.getElementById("consumption");
+    text.textContent = `Se detectó un consumo total de ${totalConsumptionSum.toFixed(2)}w/h, con un coste de $${totalCostSum}.`;
+
+    const overCost = totalCostSum - (limit * light_cost).toFixed(0);
+    const warning = document.getElementById("warning");
+    const message = "Aviso: Se está consumiendo energía por sobre el promedio per cápita nacional, se recomienda disminuir el consumo en alguno de sus artículos u optar por un electrodoméstico de menor consumo.";
+    warning.innerHTML = `${message} <u>Se está produciendo un sobregasto de $${overCost}.</u>`;
+
+    text.hidden = totalConsumptionSum === 0;
+    warning.hidden = overCost <= 0;
+}
+
 document.getElementById("new_item").addEventListener('click', addNewItem);
+addNewItem();

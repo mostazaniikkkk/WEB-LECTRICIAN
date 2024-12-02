@@ -12,6 +12,22 @@
         <div class="row">
             <div class="col-12"> <h1>WEB-LECTRICIAN</h1> </div>
             <div class="col-12">
+                <h3>Problematica</h3>
+                <p>
+                    Según estimaciones de la Agencia Internacional de Energía, cada kilovatiohora ahorrado en el hogar equivale
+                    a una reducción promedio de 0.5 kg de emisiones de CO₂. Si una
+                    vivienda logra reducir su consumo mensual en 100 kWh mediante el uso de esta herramienta, estaría 
+                    evitando la emisión de 50 kg de CO₂, equivalente a plantar dos
+                    árboles al mes. Escalando este impacto a 10.000 hogares, se podrían evitar 500 toneladas de emisiones 
+                    de carbono al mes contribuyendo con la mejora de nuestro entorno y mejorando la calidad de nuestro aire
+                </p>
+                <h3>Gestion de electrodomesticos</h3>
+            </div>
+            <div class="col-3"> <button id="new_item">Añadir elemento</button> </div>
+            <div class="col-3"> <button id="export_as_pdf">Descargar como PDF</button> </div>
+            <div class="col-3"> <button id="export_as_pdf" hidden>Descargar como Exel</button> </div>
+
+            <div class="col-12">
                 <table border="1" id="consume_table">
                     <thead>
                         <tr>
@@ -33,11 +49,75 @@
                 <h6 id="warning" hidden style="color: red;"></h6>
                 <h6 id="error" hidden>Error: No se encuentran todos los campos con contenido, por favor revisar tabla.</h6>
             </div>
-            <div class="col-3"> <button id="new_item">Añadir elemento</button> </div>
-            <div class="col-3"> <button id="export_as_pdf">Descargar como PDF</button> </div>
-            <div class="col-3"> <button id="export_as_pdf" hidden>Descargar como Exel</button> </div>
+
+            <div class="col-12"> <canvas id="consumptionChart" width="400" height="100"></canvas> </div>
+
+            <div class="col-12">
+                <p>
+                    <h3>Consejos de Ahorro Energético</h3>
+                    <ol>
+                        <li>
+                            <strong>Cambiar a iluminación LED</strong><br>
+                            <em>Ahorro estimado: 10-15%</em><br>
+                            Sustituir las bombillas incandescentes o fluorescentes por LED puede reducir significativamente el consumo energético.
+                        </li>
+                        <li>
+                            <strong>Desconectar dispositivos en modo stand-by</strong><br>
+                            <em>Ahorro estimado: 5-10%</em><br>
+                            Los aparatos en "stand-by" consumen energía constantemente. Usar regletas con interruptor ayuda a apagarlos completamente.
+                        </li>
+                        <li>
+                            <strong>Optimizar el uso del refrigerador</strong><br>
+                            <em>Ahorro estimado: 10-15%</em><br>
+                            Ajustar la temperatura a niveles óptimos (4-5 °C para el refrigerador y -18 °C para el congelador) y evitar dejar la puerta abierta reduce el consumo.
+                        </li>
+                        <li>
+                            <strong>Lavar con agua fría y cargas completas</strong><br>
+                            <em>Ahorro estimado: 5-10%</em><br>
+                            Usar agua fría en la lavadora y aprovechar su capacidad máxima disminuye el uso de energía.
+                        </li>
+                        <li>
+                            <strong>Aislar térmicamente puertas y ventanas</strong><br>
+                            <em>Ahorro estimado: 15-20%</em><br>
+                            Mejorar el aislamiento del hogar reduce el uso de calefacción y aire acondicionado.
+                        </li>
+                        <li>
+                            <strong>Aprovechar la luz natural</strong><br>
+                            <em>Ahorro estimado: 5-10%</em><br>
+                            Mantener cortinas abiertas durante el día reduce la necesidad de encender luces.
+                        </li>
+                        <li>
+                            <strong>Usar electrodomésticos eficientes (clase A o superior)</strong><br>
+                            <em>Ahorro estimado: 10-20%</em><br>
+                            Reemplazar equipos antiguos por modelos eficientes disminuye considerablemente el consumo.
+                        </li>
+                        <li>
+                            <strong>Regular el uso del calentador de agua</strong><br>
+                            <em>Ahorro estimado: 10-15%</em><br>
+                            Reducir la temperatura del calentador a 50 °C y usar duchas más cortas baja el consumo de energía.
+                        </li>
+                        <li>
+                            <strong>Apagar luces en habitaciones vacías</strong><br>
+                            <em>Ahorro estimado: 2-5%</em><br>
+                            Crear el hábito de apagar las luces innecesarias tiene un impacto directo.
+                        </li>
+                        <li>
+                            <strong>Utilizar ventiladores en lugar de aire acondicionado</strong><br>
+                            <em>Ahorro estimado: 20-30%</em><br>
+                            Cuando sea posible, los ventiladores consumen menos energía que los sistemas de aire acondicionado.
+                        </li>
+                        <li>
+                            <strong>Cocinar eficientemente</strong><br>
+                            <em>Ahorro estimado: 5-8%</em><br>
+                            Tapar ollas al cocinar y usar electrodomésticos como ollas a presión ahorra energía.
+                        </li>
+                    </ol>
+                </p>
+            </div>
         </div>
     </div>
+    <script src="Device.js"></script>
+
     <script src="table_manager.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -45,6 +125,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
-    <script src="graphics_manager.js"></script>
+    <script src="pdf_manager.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="generate_chart.js"></script>
 </body>
 </html>
